@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: suporte_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: suporte_db
+    ports:
+      - "5432:5432"
+
+  mongodb:
+    image: mongo:latest
+    container_name: suporte_mongo
+    ports:
+      - "27017:27017"
