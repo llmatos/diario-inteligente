@@ -12,3 +12,18 @@ backend/uv.lock
 frontend/node_modules/
 frontend/.expo/
 frontend/dist/
+
+# Cache do Python e FastAPI
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Arquivos de Build e Pacotes (do pyproject.toml)
+build/
+dist/
+*.egg-info/
+PKG-INFO
+requires.txt
+SOURCES.txt
+dependency_links.txt
+top_level.txt

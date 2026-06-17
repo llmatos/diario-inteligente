@@ -14,6 +14,7 @@ export default function Perfil() {
     const [telefone, setTelefone] = useState('');
     const [loadingPerfil, setLoadingPerfil] = useState(false);
     const [vinculoAtivo, setVinculoAtivo] = useState<any>(null);
+    const [email, setEmail] = useState('')
 
     const API_IP = process.env.EXPO_PUBLIC_API_IP || '10.0.2.2';
     const BASE_URL = `http://${API_IP}:8000`;
@@ -46,6 +47,7 @@ export default function Perfil() {
                     });
                     if (response.data) {
                         setNome(response.data.nome || '');
+                        setEmail(response.data.email || '');
                         setTelefone(response.data.telefone || '');
                     }
                 } catch (error) {
@@ -67,7 +69,7 @@ export default function Perfil() {
             const token = await SecureStore.getItemAsync('userToken');
             const response = await axios.patch(
                 `${BASE_URL}/users/me`,
-                { nome, telefone },
+                { nome, email, telefone },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.status === 200) {
@@ -162,6 +164,19 @@ export default function Perfil() {
                         onChangeText={setNome}
                         placeholder="Atualize seu nome completo"
                         placeholderTextColor="#A0A0A0"
+                    />
+                </View>
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>E-MAIL</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={email}
+                        onChangeText={setEmail}
+                        placeholder="seu@email.com"
+                        placeholderTextColor="#A0A0A0"
+                        keyboardType="email-address"
+                        autoCapitalize="none"
                     />
                 </View>
 

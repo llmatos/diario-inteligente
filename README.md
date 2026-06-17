@@ -38,7 +38,7 @@ diarioInteligente/
 ---
 
 ## 🚀 Tecnologias Utilizadas
-* **Mobile:** React Native 0.79, Expo 53, TypeScript
+* **Mobile:** React Native 0.83, Expo 55, TypeScript
 * **Backend:** FastAPI, Uvicorn, SQLAlchemy, Python 3.12
 * **Inteligência Artificial:** Google Gemini 3.1 Flash Lite
 * **Banco de Dados:** PostgreSQL 15, MongoDB 7
@@ -83,8 +83,8 @@ python -m venv .venv
 # No Linux/Mac:
 source .venv/bin/activate
 
-# Instale as dependências necessárias
-pip install -r requirements.txt
+# Instale as dependências lendo o arquivo pyproject.toml
+pip install .
 
 # Inicie a aplicação em modo de desenvolvimento
 uvicorn src.main:app --reload
@@ -106,7 +106,17 @@ npm install
 # Inicie o servidor do Expo
 npx expo start
 ```
-Utilize o aplicativo **Expo Go** no seu smartphone físico ou use um emulador configurado (Android/iOS) para visualizar e testar o app.
+
+
+#### 🤖 Executando no Emulador (Android Studio)
+Execute a aplicação dentro do ambiente virtual emulado:
+
+1. Certifique-se de que as ferramentas de virtualização (IOMMU/SVM/Hyper-V) estão ativas no seu sistema.
+2. Abra o **Android Studio** e acesse o **Device Manager** (Gerenciador de Dispositivos).
+3. Inicie o seu dispositivo virtual configurado (recomenda-se uma API estável) clicando no botão de *Play*.
+4. Aguarde a completa inicialização do sistema Android no emulador.
+5. Com o emulador aberto, vá até o terminal onde executou o `npx expo start` e pressione a tecla **`a`** no teclado.
+6. O Metro Bundler fará o download automático do cliente do Expo Go para dentro do emulador e abrirá o projeto diretamente na tela de autenticação.
 
 ---
 
