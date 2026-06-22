@@ -9,7 +9,9 @@ type RegistroCardProps = {
     dataCriacao: string;
     onDelete: (id: string) => void; 
     onShare: (id: string) => void;
+    onUnShare: (id: string) => void;
     textoCompleto: string;
+    compartilhado: boolean;
 }
 
 
@@ -42,7 +44,9 @@ export default function RegistroCard({
     dataCriacao,
     textoCompleto,
     onDelete,
-    onShare
+    onShare,
+    onUnShare,
+    compartilhado
 }: RegistroCardProps) {
     
     const [modalVisivel, setModalVisivel] = useState(false);
@@ -68,16 +72,36 @@ export default function RegistroCard({
     return (
         <View style={styles.card}>
             <View style={styles.headerRow}>
-                <Text style={styles.dateText}>{formatarData(dataCriacao)}</Text>
+                <View style={styles.dateContainer}>
+                    <Text style={styles.dateText}>{formatarData(dataCriacao)}</Text>
+                    
+                   
+                    {compartilhado && (
+                        <View style={styles.badgeCompartilhado}>
+                            <Ionicons name="people-outline" size={12} color="#4E6151" />
+                            <Text style={{ fontSize: 10, color: '#4E6151', fontWeight: '600' }}>Psicólogo</Text>
+                        </View>
+                    )}
+                </View>
                 
                 <View style={styles.actionButtonsContainer}>
-                    <TouchableOpacity 
-                        onPress={() => onShare(id)} 
-                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} 
-                        style={styles.iconButton}
-                    >
-                        <Ionicons name="share-outline" size={20} color="#4E6151" />
-                    </TouchableOpacity>
+                    {compartilhado ? (
+                        <TouchableOpacity 
+                            onPress={() => onUnShare(id)} 
+                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} 
+                            style={styles.iconButton}
+                        >
+                            <Ionicons name="lock-closed-outline" size={20} color="#8C8C8C" />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity 
+                            onPress={() => onShare(id)} 
+                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} 
+                            style={styles.iconButton}
+                        >
+                            <Ionicons name="share-outline" size={20} color="#4E6151" />
+                        </TouchableOpacity>
+                    )}
 
                     <TouchableOpacity 
                         onPress={() => onDelete(id)} 
@@ -164,6 +188,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 12,
     },
+    dateContainer: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        gap: 8,
+    },
+    badgeCompartilhado: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        backgroundColor: '#E8EFE9', 
+        paddingHorizontal: 6, 
+        paddingVertical: 2, 
+        borderRadius: 10, 
+        gap: 4,
+    },
+    badgeText: {
+        fontSize: 10, 
+        color: '#4E6151', 
+        fontWeight: '600',
+    },
     actionButtonsContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -204,21 +247,17 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '600',
     },
-    
-    // ==========================================
-    // ESTILOS DO MODAL
-    // ==========================================
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.4)', // Fundo escuro semi-transparente
+        backgroundColor: 'rgba(0, 0, 0, 0.4)', 
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
     },
     modalContent: {
-        backgroundColor: '#F8F9F5', // Mesmo bege claro do fundo do app
+        backgroundColor: '#F8F9F5', 
         width: '100%',
-        maxHeight: '80%', // Evita que o modal ocupe a tela inteira
+        maxHeight: '80%', 
         borderRadius: 25,
         padding: 25,
         ...Platform.select({
@@ -242,7 +281,7 @@ const styles = StyleSheet.create({
     modalFullText: {
         fontSize: 18,
         color: '#1A1A1A',
-        lineHeight: 28, // Um pouco mais de espaço entre linhas para leitura longa
+        lineHeight: 28, 
         fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif',
         paddingBottom: 20,
     }

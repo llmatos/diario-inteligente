@@ -4,6 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useState } from "react";
 import { Alert, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, ScrollView } from "react-native";
 import SvgIcon from "@/components/LogoProject";
+import { Ionicons } from '@expo/vector-icons';
 
 
 interface CustomJwtPayload {
@@ -16,6 +17,7 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const API_IP = '10.0.2.2';
   const BASE_URL = `http://${API_IP}:8000`;
@@ -32,7 +34,7 @@ export default function Login() {
     formData.append('password', password);
 
     try {
-      
+
       const response = await axios.post(`${BASE_URL}/auth/jwt/login`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
@@ -40,7 +42,7 @@ export default function Login() {
       if (response.data.access_token) {
         const tokenString = response.data.access_token;
         await SecureStore.setItemAsync('userToken', tokenString);
-    
+
         const meResponse = await axios.get(`${BASE_URL}/vinculos/me`, {
           headers: { Authorization: `Bearer ${tokenString}` }
         });
@@ -68,7 +70,7 @@ export default function Login() {
     >
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
-       
+
         <View style={styles.headerContainer}>
           <View style={styles.logoCircle}>
             <SvgIcon />
@@ -77,9 +79,9 @@ export default function Login() {
           <Text style={styles.subtitle}>Retorne ao seu espaço seguro para reflexão e calma.</Text>
         </View>
 
-        
+
         <View style={styles.card}>
-          <Text style={styles.label}>EMAIL ADDRESS</Text>
+          <Text style={styles.label}>ENDEREÇO DE E-MAIL</Text>
           <TextInput
             style={styles.input}
             placeholder="seu@email.com"
@@ -91,39 +93,49 @@ export default function Login() {
           />
 
           <View style={styles.labelRow}>
-            <Text style={styles.label}>PASSWORD</Text>
-            <TouchableOpacity>
-              <Text style={styles.forgotPassword}>FORGOT PASSWORD?</Text>
+            <Text style={styles.label}>SENHA</Text>
+
+          </View>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="********"
+              placeholderTextColor="#A0A0A0"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!mostrarSenha}
+            />
+            <TouchableOpacity 
+              style={styles.eyeIcon} 
+              onPress={() => setMostrarSenha(!mostrarSenha)}
+            >
+              <Ionicons 
+                name={mostrarSenha ? "eye-off-outline" : "eye-outline"} 
+                size={22} 
+                color="#A0A0A0" 
+              />
             </TouchableOpacity>
           </View>
-          <TextInput
-            style={styles.input}
-            placeholder="********"
-            placeholderTextColor="#A0A0A0"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={true}
-          />
 
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleLogin}
             disabled={loading}
           >
-            <Text style={styles.buttonText}>{loading ? 'Entrando...' : 'Sign In'}</Text>
+            <Text style={styles.buttonText}>{loading ? 'Entrando...' : 'Entrar'}</Text>
           </TouchableOpacity>
         </View>
 
-        
+
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>
             Novo no Clareza?{' '}
-            <Link href="/(auth)/signup" asChild>
-              <TouchableOpacity>
-                <Text style={styles.footerLink}>Criar uma Conta</Text>
-              </TouchableOpacity>
-            </Link>
           </Text>
+          <Link href="/(auth)/signup" asChild>
+            <TouchableOpacity>
+              <Text style={styles.footerLink}>Criar uma Conta</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
 
       </ScrollView>
@@ -134,11 +146,11 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9F5', 
+    backgroundColor: '#F8F9F5',
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center', 
+    justifyContent: 'center',
     paddingHorizontal: 25,
     paddingVertical: 60,
   },
@@ -181,7 +193,7 @@ const styles = StyleSheet.create({
   labelRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end', 
+    alignItems: 'flex-end',
     marginBottom: 8,
     marginTop: 20,
   },
@@ -207,6 +219,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#1A1A1A',
   },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0F2F0',
+    height: 55,
+    borderRadius: 12,
+    paddingHorizontal: 15,
+  },
+  passwordInput: {
+    flex: 1,
+    height: '100%',
+    fontSize: 15,
+    color: '#1A1A1A',
+  },
+  eyeIcon: {
+    padding: 5,
+  },
   button: {
     backgroundColor: '#4E6151',
     height: 55,
@@ -224,6 +253,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   footerContainer: {
+    flexDirection: 'row',        
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
   },

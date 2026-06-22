@@ -170,19 +170,48 @@ const styles = StyleSheet.create({
         marginBottom: 8
     },
     subtitle: {
-        fontSize: 14, color: '#666', lineHeight: 20, marginBottom: 25
+        fontSize: 14, 
+        color: '#666', 
+        lineHeight: 20, 
+        marginBottom: 25
     },
     card: { 
-        backgroundColor: '#FFFFFF', borderRadius: 25, padding: 25, elevation: 3, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, marginBottom: 25 
+        backgroundColor: '#FFFFFF', 
+        borderRadius: 25, 
+        padding: 25, 
+        elevation: 3, 
+        shadowColor: '#000', 
+        shadowOpacity: 0.05, 
+        shadowRadius: 10, 
+        shadowOffset: { 
+            width: 0, 
+            height: 4 }, 
+        marginBottom: 25 
     },
     cardTitle: { 
-        fontSize: 18, fontWeight: '700', color: '#1A1A1A', marginBottom: 4 
+        fontSize: 18, 
+        fontWeight: '700', 
+        color: '#1A1A1A', 
+        marginBottom: 4 
     },
     cardSubtitle: { 
-        fontSize: 12, color: '#8C8C8C', marginBottom: 25 
+        fontSize: 12, 
+        color: '#8C8C8C', 
+        marginBottom: 25 
     },
     insightCard: { 
-        backgroundColor: '#FFFFFF', borderRadius: 25, borderLeftWidth: 5, borderLeftColor: '#4E6151', padding: 25, elevation: 2, shadowColor: '#000', shadowOpacity: 0.03, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } 
+        backgroundColor: '#FFFFFF', 
+        borderRadius: 25, 
+        borderLeftWidth: 5, 
+        borderLeftColor: '#4E6151', 
+        padding: 25, 
+        elevation: 2, 
+        shadowColor: '#000', 
+        shadowOpacity: 0.03, 
+        shadowRadius: 10, 
+        shadowOffset: { 
+            width: 0, 
+            height: 4 } 
     },
     insightTitle: { 
         fontSize: 15, 

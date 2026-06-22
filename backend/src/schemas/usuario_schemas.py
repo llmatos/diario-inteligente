@@ -1,6 +1,6 @@
 import uuid
 from typing import Optional
-from pydantic import Field
+from pydantic import BaseModel, Field
 from fastapi_users import schemas
 
 
@@ -27,4 +27,7 @@ class UsuarioUpdate(schemas.BaseUserUpdate):
     nome: Optional[str] = None    
     telefone: Optional[str] = None
     email: Optional[str] = None
-  
+
+class PasswordChangeRequest(BaseModel):
+    senha_atual: str
+    nova_senha: str

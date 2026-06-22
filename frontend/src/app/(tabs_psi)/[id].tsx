@@ -35,21 +35,10 @@ export default function ProntuarioPaciente() {
 
    
     const [relatosDadosGrafico, setRelatosDadosGrafico] = useState<DadoEmocao[]>([]); 
-    const [registrosExibicaoTexto, setRegistrosExibicaoTexto] = useState<any[]>([]); 
+
 
     const processarEstatisticas = (panorama: any[], compartilhados: any[], filtro: 'semana' | 'mes' | 'ano') => {
         const agora = new Date();
-        
-        
-        const compartilhadosFiltrados = compartilhados.filter(reg => {
-            const dataReg = new Date(reg.data_criacao);
-            const diasDiff = (agora.getTime() - dataReg.getTime()) / (1000 * 3600 * 24);
-            if (filtro === 'semana') return diasDiff <= 7;
-            if (filtro === 'mes') return diasDiff <= 30;
-            return diasDiff <= 365; 
-        });
-        setRegistrosExibicaoTexto(compartilhadosFiltrados);
-
         
         const panoramaFiltrado = panorama.filter(reg => {
             const dataReg = new Date(reg.data_criacao);
@@ -158,7 +147,7 @@ export default function ProntuarioPaciente() {
                     onChange={(valor) => setFiltroTempo(valor)}
                 />
                 
-                {/* GRÁFICO (AGORA BASEADO NO PANORAMA TOTAL) */}
+                
                 <SeletorFiltro 
                     opcoes={[{ label: 'Barras', valor: 'barras' }, { label: 'Pizza', valor: 'pizza' }]}
                     valorAtivo={tipoGrafico}
@@ -181,20 +170,23 @@ export default function ProntuarioPaciente() {
                 
                 <Text style={styles.sectionTitle}>Diários Compartilhados</Text>
                 
-                {registrosExibicaoTexto.length === 0 ? (
-                    <Text style={{ textAlign: 'center', color: '#8C8C8C', marginTop: 10 }}>O paciente não compartilhou relatos neste período.</Text>
+                {compartilhadosOriginais.length === 0 ? (
+                    <Text style={{ textAlign: 'center', color: '#8C8C8C', marginTop: 10 }}>O paciente ainda não compartilhou relatos.</Text>
                 ) : (
-                    registrosExibicaoTexto.map((reg) => (
-                        <View key={reg.id} style={styles.registroCard}>
-                            <View style={styles.registroHeader}>
-                                <Text style={styles.registroData}>{formatarData(reg.data_criacao)}</Text>
-                                <View style={[styles.tagSentimento, { backgroundColor: coresEmocoes[reg.sentimento] || '#666' }]}>
-                                    <Text style={styles.tagText}>{reg.sentimento}</Text>
+                
+                    [...compartilhadosOriginais]
+                        .sort((a, b) => new Date(b.data_criacao).getTime() - new Date(a.data_criacao).getTime())
+                        .map((reg) => (
+                            <View key={reg.id} style={styles.registroCard}>
+                                <View style={styles.registroHeader}>
+                                    <Text style={styles.registroData}>{formatarData(reg.data_criacao)}</Text>
+                                    <View style={[styles.tagSentimento, { backgroundColor: coresEmocoes[reg.sentimento] || '#666' }]}>
+                                        <Text style={styles.tagText}>{reg.sentimento}</Text>
+                                    </View>
                                 </View>
+                                <Text style={styles.registroTexto}>{reg.relato}</Text>
                             </View>
-                            <Text style={styles.registroTexto}>{reg.relato}</Text>
-                        </View>
-                    ))
+                        ))
                 )}
             </ScrollView>
         </View>
@@ -202,21 +194,98 @@ export default function ProntuarioPaciente() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F8F9F5' },
-    centerAll: { justifyContent: 'center', alignItems: 'center' },
-    header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 60, paddingHorizontal: 25, paddingBottom: 15, backgroundColor: '#FFFFFF', elevation: 2, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 5, shadowOffset: { width: 0, height: 2 } },
-    headerTitle: { fontSize: 18, fontWeight: '700', color: '#1A1A1A', fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif' },
-    scrollContent: { paddingHorizontal: 25, paddingTop: 25, paddingBottom: 100 },
-    card: { backgroundColor: '#FFFFFF', borderRadius: 25, padding: 25, elevation: 3, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, marginBottom: 25, marginTop: 10 },
-    cardTitle: { fontSize: 18, fontWeight: '700', color: '#1A1A1A', marginBottom: 4 },
-    cardSubtitle: { fontSize: 12, color: '#8C8C8C', marginBottom: 20 },
-    sectionTitle: { fontSize: 15, fontWeight: '700', color: '#4E6151', marginBottom: 15, textTransform: 'uppercase' },
-    registroCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 20, marginBottom: 15, borderLeftWidth: 4, borderLeftColor: '#E5E5DE', elevation: 1 },
-    registroHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-    registroData: { fontSize: 12, color: '#8C8C8C', fontWeight: '500', textTransform: 'uppercase' },
-    tagSentimento: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
-    tagText: { color: '#FFF', fontSize: 11, fontWeight: '700' },
-    registroTexto: { fontSize: 15, color: '#333', lineHeight: 24 },
-    emptyContainer: { alignItems: 'center', marginTop: 80 },
-    emptyText: { fontSize: 15, color: '#8C8C8C', marginTop: 15, textAlign: 'center' },
+    container: { 
+        flex: 1, 
+        backgroundColor: '#F8F9F5' },
+    centerAll: { 
+        justifyContent: 'center', 
+        alignItems: 'center' },
+    header: { 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        paddingTop: 60, 
+        paddingHorizontal: 25, 
+        paddingBottom: 15, 
+        backgroundColor: '#FFFFFF', 
+        elevation: 2, 
+        shadowColor: '#000', 
+        shadowOpacity: 0.05, 
+        shadowRadius: 5, 
+        shadowOffset: { width: 0, height: 2 } },
+    headerTitle: { 
+        fontSize: 18, 
+        fontWeight: '700', 
+        color: '#1A1A1A', 
+        fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif' },
+    scrollContent: { 
+        paddingHorizontal: 25, 
+        paddingTop: 25, 
+        paddingBottom: 100 },
+    card: { 
+        backgroundColor: '#FFFFFF', 
+        borderRadius: 25, 
+        padding: 25, 
+        elevation: 3, 
+        shadowColor: '#000', 
+        shadowOpacity: 0.05, 
+        shadowRadius: 10, 
+        shadowOffset: { 
+            width: 0, 
+            height: 4 }, 
+        marginBottom: 25, 
+        marginTop: 10 },
+    cardTitle: { 
+        fontSize: 18, 
+        fontWeight: '700', 
+        color: '#1A1A1A', 
+        marginBottom: 4 },
+    cardSubtitle: { 
+        fontSize: 12, 
+        color: '#8C8C8C', 
+        marginBottom: 20 },
+    sectionTitle: { 
+        fontSize: 15, 
+        fontWeight: '700', 
+        color: '#4E6151', 
+        marginBottom: 15, 
+        textTransform: 'uppercase' },
+    registroCard: { 
+        backgroundColor: '#FFFFFF', 
+        borderRadius: 20, 
+        padding: 20, 
+        marginBottom: 15, 
+        borderLeftWidth: 4, 
+        borderLeftColor: '#E5E5DE', 
+        elevation: 1 },
+    registroHeader: { 
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: 12 },
+    registroData: { 
+        fontSize: 12, 
+        color: '#8C8C8C', 
+        fontWeight: '500', 
+        textTransform: 'uppercase' },
+    tagSentimento: { 
+        paddingHorizontal: 10, 
+        paddingVertical: 4, 
+        borderRadius: 12 },
+    tagText: { 
+        color: '#FFF', 
+        fontSize: 11, 
+        fontWeight: '700' },
+    registroTexto: { 
+        fontSize: 15, 
+        color: '#333', 
+        lineHeight: 24 },
+    emptyContainer: { 
+        alignItems: 'center', 
+        marginTop: 80 },
+    emptyText: { 
+        fontSize: 15, 
+        color: '#8C8C8C', 
+        marginTop: 15, 
+        textAlign: 'center' },
 });

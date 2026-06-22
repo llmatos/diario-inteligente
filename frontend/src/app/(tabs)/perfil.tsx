@@ -6,6 +6,7 @@ import { Alert, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, S
 import CardVinculo from '@/components/CardVinculo';
 import AcoesConta from '@/components/AcoesConta';
 import RemoverVinculo from '@/components/RemoverVinculo';
+import ModalTrocarSenha from '@/components/ModalTrocarSenha';
 
 export default function Perfil() {
     const router = useRouter();
@@ -15,6 +16,7 @@ export default function Perfil() {
     const [loadingPerfil, setLoadingPerfil] = useState(false);
     const [vinculoAtivo, setVinculoAtivo] = useState<any>(null);
     const [email, setEmail] = useState('')
+    const [modalSenhaVisivel, setModalSenhaVisivel] = useState(false);
 
     const API_IP = process.env.EXPO_PUBLIC_API_IP || '10.0.2.2';
     const BASE_URL = `http://${API_IP}:8000`;
@@ -201,6 +203,20 @@ export default function Perfil() {
                 </TouchableOpacity>
             </View>
 
+            <TouchableOpacity
+                style={{ alignSelf: 'center', marginVertical: 20 }}
+                onPress={() => setModalSenhaVisivel(true)}
+            >
+                <Text style={{ color: '#4E6151', fontWeight: '600', fontSize: 15 }}>
+                    Alterar minha senha
+                </Text>
+            </TouchableOpacity>
+
+
+            <ModalTrocarSenha
+                visivel={modalSenhaVisivel}
+                onClose={() => setModalSenhaVisivel(false)}
+            />
 
             <AcoesConta
                 onLogout={handleLogout}

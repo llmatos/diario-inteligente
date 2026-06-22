@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy import or_
+from sqlalchemy import or_, delete
 
 from src.database import get_async_session
 from src.models.usuarios import Usuario, Psicologo, Paciente, Vinculo, AcessoRegistro
 from src.models.registros import Registro
-from src.services.auth import current_active_user
+from src.services.auth_service import current_active_user
 
 router = APIRouter(prefix="/vinculos", tags=["Vínculos e Compartilhamento"])
 
@@ -131,6 +131,12 @@ async def romper_vinculo(
 
     if not vinculo:
         raise HTTPException(status_code=404, detail="Vínculo não encontrado ou acesso negado.")
+    
+    query_limpeza = delete(AcessoRegistro).where(
+        AcessoRegistro.paciente_id == vinculo.paciente_id,
+        AcessoRegistro.psicologo_id == vinculo.psicologo_id
+    )
+    await session.execute(query_limpeza)
 
     await session.delete(vinculo)
     await session.commit()
@@ -230,3 +236,29 @@ async def get_meu_vinculo(
 @router.get("/me")
 async def get_usuario_logado(usuario: Usuario = Depends(current_active_user)):
     return {"tipo_usuario": usuario.tipo_usuario}
+
+@router.delete("/compartilhar/{registro_id}")
+async def remover_compartilhamento(
+    registro_id: str,
+    usuario: Usuario = Depends(current_active_user),
+    session: AsyncSession = Depends(get_async_session)
+):
+    if usuario.tipo_usuario != "paciente":
+        raise HTTPException(status_code=403, detail="Apenas pacientes podem alterar acessos.")
+
+   
+    query = select(AcessoRegistro).where(
+        AcessoRegistro.registro_id == registro_id,
+        AcessoRegistro.paciente_id == usuario.id
+    )
+    result = await session.execute(query)
+    acesso = result.scalar_one_or_none()
+
+    if not acesso:
+        raise HTTPException(status_code=404, detail="Este relato não está compartilhado.")
+
+    
+    await session.delete(acesso)
+    await session.commit()
+
+    return {"mensagem": "O relato voltou a ser privado."}

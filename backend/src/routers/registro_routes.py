@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 from src.models.registros import Registro
 from src.services.registro_service import criar_registro, buscar_registros, deletar_registro, buscar_registros_compartilhados
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.services.auth import current_active_user
+from src.services.auth_service import current_active_user
 from src.database import get_async_session
 
 router = APIRouter(

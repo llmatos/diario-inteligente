@@ -6,7 +6,7 @@ from fastapi import Depends, HTTPException, Request
 from src.models.usuarios import Usuario, get_user_db, AcessoRegistro
 from src.models.registros import Registro
 from src.services.ai_service import analyze_sentiment, summarize_text
-from src.services.auth import current_active_user
+from src.services.auth_service import current_active_user
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.database import get_async_session
@@ -48,6 +48,11 @@ async def buscar_registros(usuario_id, session):
    
     if not registros_sql:
         return []
+    
+    registro_ids = [reg.id for reg in registros_sql]
+    query_acessos = select(AcessoRegistro.registro_id).where(AcessoRegistro.registro_id.in_(registro_ids))
+    result_acessos = await session.execute(query_acessos)
+    registros_compartilhados_ids = set(result_acessos.scalars().all())
 
     ids_mongo = [ObjectId(reg.mongo_doc_id) for reg in registros_sql]
 
@@ -72,7 +77,8 @@ async def buscar_registros(usuario_id, session):
             "sentimento": reg.sentimento,
             "data_criacao": reg.data_criacao.isoformat(),
             "resumo": conteudo_mongo.get("resumo", "Resumo não encontrado"),
-            "relato": conteudo_mongo.get("conteudo", "Relato não encontrado") 
+            "relato": conteudo_mongo.get("conteudo", "Relato não encontrado"),
+            "compartilhado": reg.id in registros_compartilhados_ids 
         })
 
     return registros_completos

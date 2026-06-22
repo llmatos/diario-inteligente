@@ -4,6 +4,7 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import AcoesConta from '@/components/AcoesConta';
+import ModalTrocarSenha from '@/components/ModalTrocarSenha';
 
 export default function AjustesPsicologo() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function AjustesPsicologo() {
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [loadingPerfil, setLoadingPerfil] = useState(false);
+  const [modalSenhaVisivel, setModalSenhaVisivel] = useState(false);
 
   const API_IP = process.env.EXPO_PUBLIC_API_IP || '10.0.2.2';
   const BASE_URL = `http://${API_IP}:8000`;
@@ -167,6 +169,21 @@ export default function AjustesPsicologo() {
           <Text style={styles.buttonText}>{loadingPerfil ? 'Salvando...' : 'Salvar Alterações'}</Text>
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity
+        style={{ alignSelf: 'center', marginVertical: 20 }}
+        onPress={() => setModalSenhaVisivel(true)}
+      >
+        <Text style={{ color: '#4E6151', fontWeight: '600', fontSize: 15 }}>
+          Alterar minha senha
+        </Text>
+      </TouchableOpacity>
+
+      
+      <ModalTrocarSenha
+        visivel={modalSenhaVisivel}
+        onClose={() => setModalSenhaVisivel(false)}
+      />
 
       <AcoesConta
         onLogout={handleLogout}

@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.schemas.usuario_schemas import UsuarioRead, UsuarioUpdate
 from src.models.usuarios import Usuario
-from src.services.auth import auth_backend, current_active_user, fastapi_users
+from src.services.auth_service import auth_backend, current_active_user, fastapi_users
 from src.database import create_db_and_tables, get_async_session, Base
 from src.routers import registro_routes
 from src.routers import usuario_routes
