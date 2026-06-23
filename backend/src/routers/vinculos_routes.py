@@ -152,7 +152,7 @@ async def compartilhar_registro(
     session: AsyncSession = Depends(get_async_session)
 ):
     if usuario.tipo_usuario != "paciente":
-        raise HTTPException(status_code=403, detail="Apenas pacientes podem compartilhar relatos.")
+        raise HTTPException(status_code=403, detail="Acesso negado.")
 
     query_registro = select(Registro).where(
         Registro.id == registro_id, 
@@ -171,7 +171,7 @@ async def compartilhar_registro(
     vinculo = (await session.execute(query_vinculo)).scalar_one_or_none()
 
     if not vinculo:
-        raise HTTPException(status_code=400, detail="Você precisa de um vínculo ATIVO com um psicólogo para compartilhar.")
+        raise HTTPException(status_code=400, detail="Vinculo Ativo necessário")
 
     query_acesso = select(AcessoRegistro).where(
         AcessoRegistro.registro_id == registro_id,
