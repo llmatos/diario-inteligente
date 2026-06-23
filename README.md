@@ -128,6 +128,7 @@ GEMINI_API_KEY=sua_chave_da_api_do_google_aqui
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/diario
 MONGO_URL=mongodb://localhost:27017/diario
 JWT_SECRET=sua_chave_secreta_jwt_aqui
+LLM_MODEL = "gemini-3.1-flash-lite"
 ```
 
 ---

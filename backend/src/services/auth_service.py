@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-secret = os.getenv("SECRET")
+secret = os.getenv("JWT_SECRET")
 
 class UserManager(UUIDIDMixin, BaseUserManager[Usuario, uuid.UUID]):
     reset_password_token_secret = secret
