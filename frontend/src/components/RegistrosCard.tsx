@@ -178,8 +178,17 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         width: '100%',
         ...Platform.select({
-            ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 10 },
-            android: { elevation: 3 },
+            ios: { 
+                shadowColor: '#000', 
+                shadowOffset: { 
+                    width: 0, 
+                    height: 2 }, 
+                    shadowOpacity: 0.05, 
+                    shadowRadius: 10 
+                },
+            android: { 
+                elevation: 3 
+            },
         }),
     },
     headerRow: {
@@ -261,8 +270,16 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         padding: 25,
         ...Platform.select({
-            ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 20 },
-            android: { elevation: 10 },
+            ios: { shadowColor: '#000', 
+                shadowOffset: { 
+                    width: 0, 
+                    height: 10 }, 
+                    shadowOpacity: 0.1, 
+                    shadowRadius: 20 
+                },
+            android: { 
+                elevation: 10 
+            },
         }),
     },
     modalHeader: {

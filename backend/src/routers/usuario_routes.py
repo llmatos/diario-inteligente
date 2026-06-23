@@ -13,7 +13,7 @@ router = APIRouter(prefix="/auth", tags=["Autenticação"])
 async def register_paciente(
     payload: PacienteCreate, 
     db: AsyncSession = Depends(get_async_session),
-    user_manager: UserManager = Depends(get_user_manager) # <--- 1. INJEÇÃO ADICIONADA AQUI
+    user_manager: UserManager = Depends(get_user_manager)
 ):
     
     result_email = await db.execute(select(Usuario).where(Usuario.email == payload.email))
@@ -32,7 +32,7 @@ async def register_paciente(
 
     novo_paciente = Paciente(
         email=payload.email,
-        hashed_password=user_manager.password_helper.hash(payload.password), # <--- 2. HASH NATIVO AQUI
+        hashed_password=user_manager.password_helper.hash(payload.password),
         is_active=True,
         is_superuser=False,
         is_verified=False,
@@ -51,7 +51,7 @@ async def register_paciente(
 async def register_psicologo(
     payload: PsicologoCreate, 
     db: AsyncSession = Depends(get_async_session),
-    user_manager: UserManager = Depends(get_user_manager) # <--- 1. INJEÇÃO ADICIONADA AQUI
+    user_manager: UserManager = Depends(get_user_manager)
 ):
     result_email = await db.execute(select(Usuario).where(Usuario.email == payload.email))
     if result_email.scalar_one_or_none():
@@ -76,7 +76,7 @@ async def register_psicologo(
 
     novo_psicologo = Psicologo(
         email=payload.email,
-        hashed_password=user_manager.password_helper.hash(payload.password), # <--- 2. HASH NATIVO AQUI
+        hashed_password=user_manager.password_helper.hash(payload.password),
         is_active=True,
         is_superuser=False,
         is_verified=False,

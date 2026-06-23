@@ -28,7 +28,7 @@ app = FastAPI(lifespan=lifespan)
 
 origins = [
     "http://localhost",
-    "http://localhost:8081", #porta Expo/React Native
+    "http://localhost:8081",
     "http://127.0.0.1:8081",
 ]
 

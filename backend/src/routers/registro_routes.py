@@ -63,7 +63,7 @@ async def panorama_paciente(
     if usuario.tipo_usuario != "psicologo":
         raise HTTPException(status_code=403, detail="Acesso restrito a psicólogos.")
     
-    # Busca apenas id, sentimento e data (sem o texto)
+
     query = select(Registro.id, Registro.sentimento, Registro.data_criacao).where(
         Registro.paciente_id == paciente_id
     )
